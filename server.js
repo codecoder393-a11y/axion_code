@@ -42,4 +42,12 @@ app.get('/api/avatar/:address', (req, res) => {
 
 app.get('/', (req, res) => res.send('Axion local backend (avatars)'));
 
-app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+// When deployed on Vercel the platform runs the file as a serverless function.
+// Vercel sets the environment variable `VERCEL=1` for builds/deploys. In
+// that case export the Express `app` as the module export so Vercel can use
+// it as a handler. When running locally, start the server normally.
+if (process.env.VERCEL) {
+  module.exports = app; // Vercel will use this as the request handler
+} else {
+  app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+}
